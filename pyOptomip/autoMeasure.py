@@ -45,7 +45,7 @@ class autoMeasure(object):
         # Remove the first line since it is the header and remove newline char  
         dataStrip = [line.strip() for line in data[1:]];
         
-        reg = re.compile(r'(.*),(.*),(.*),([0-9]+),(.+),(.+),(.*)');
+        reg = re.compile(r'(.*),(.*),(.*),(.[0-9]+),(.+),(.+)');
         
         self.deviceCoordDict = OrderedDict();
         
@@ -53,7 +53,19 @@ class autoMeasure(object):
         for ii,line in enumerate(dataStrip):
             if reg.match(line):
                 matchRes = reg.findall(line)[0]
-                devName = matchRes[5]
+                char_lim = 40 # Character limit for device name
+                devName = ""
+                char_count = 0
+                for i in range(5, len(matchRes)):
+                    char_count += len(matchRes[i])
+                    if char_count > char_lim:
+                        devName += matchRes[i][0:char_lim-char_count]
+                        break
+                    else:
+                        if i == len(matchRes)-1:
+                            devName += matchRes[i]
+                        else:
+                            devName += matchRes[i] + "_"
                 if devName in self.deviceCoordDict:
                     uniqueDevName = devName+'_'+str(ii)
                     print 'Warning: The device name %s is duplicated. Changing its name to %s.'%(devName,uniqueDevName)
@@ -64,7 +76,6 @@ class autoMeasure(object):
                 self.deviceCoordDict[devName]['polarization'] = matchRes[2]
                 self.deviceCoordDict[devName]['wavelength'] = matchRes[3]
                 self.deviceCoordDict[devName]['type'] = matchRes[4]
-                self.deviceCoordDict[devName]['comment'] = matchRes[6]
                 self.deviceCoordDict[devName]['id'] = ii
                 self.deviceCoordDict[devName]['line'] = line
             else:
