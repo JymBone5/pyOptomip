@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+"""creates a frame for the corvus eco , creates connectPanel, calls InitUI"""
+
 import wx
 
 import CorvusEco
@@ -36,6 +38,11 @@ class CorvusEcoParameters(wx.Panel):
         
         
     def InitUI(self):
+        """
+        creates panels for corvus eco paremter display, one panel for inputting serial port,
+        another panel for inputting the number of axis, create connect and disconnect buttons
+        using connect and disconnect functions, fills in the rest of the frame
+        """
         sb = wx.StaticBox(self, label='Corvus Eco Connection Parameters');
         vbox = wx.StaticBoxSizer(sb, wx.VERTICAL)
         hbox = wx.BoxSizer(wx.HORIZONTAL)
@@ -45,13 +52,13 @@ class CorvusEcoParameters(wx.Panel):
         self.para1name = wx.StaticText(self,label='Serial Port')
         self.para1tc = wx.ComboBox(self, choices=pyvisa.ResourceManager().list_resources())
         #self.para1tc = wx.TextCtrl(self,value='ASRL5::INSTR')
-        self.para1.AddMany([(self.para1name,1,wx.EXPAND|wx.ALIGN_LEFT),(self.para1tc,1,wx.EXPAND|wx.ALIGN_RIGHT)])
+        self.para1.AddMany([(self.para1name,1,wx.EXPAND),(self.para1tc,1,wx.EXPAND)])
         
         #Second Parameter: Number of Axis
         self.para2 = wx.BoxSizer(wx.HORIZONTAL)
         self.para2name = wx.StaticText(self,label='Number of Axis')
         self.para2tc = wx.TextCtrl(self,value='2')
-        self.para2.AddMany([(self.para2name,1,wx.EXPAND|wx.ALIGN_LEFT),(self.para2tc,1,wx.EXPAND|wx.ALIGN_RIGHT)])
+        self.para2.AddMany([(self.para2name,1,wx.EXPAND),(self.para2tc,1,wx.EXPAND)])
         
         self.disconnectBtn = wx.Button(self, label='Disconnect')
         self.disconnectBtn.Bind( wx.EVT_BUTTON, self.disconnect)
@@ -60,8 +67,8 @@ class CorvusEcoParameters(wx.Panel):
         self.connectBtn = wx.Button(self, label='Connect')
         self.connectBtn.Bind( wx.EVT_BUTTON, self.connect)
         
-        hbox.AddMany([(self.disconnectBtn, 0, wx.ALIGN_RIGHT), (self.connectBtn, 0, wx.ALIGN_RIGHT)])
-        vbox.AddMany([(self.para1,0,wx.EXPAND),(self.para2,0,wx.EXPAND), (hbox,0,wx.ALIGN_BOTTOM)])
+        hbox.AddMany([(self.disconnectBtn, 0), (self.connectBtn, 0)])
+        vbox.AddMany([(self.para1,0,wx.EXPAND),(self.para2,0,wx.EXPAND), (hbox,0)])
         
         
         
